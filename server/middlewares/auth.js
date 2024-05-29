@@ -1,22 +1,35 @@
 const { verifyToken } = require("../helper");
-
+const { User } = require("../models");
 
 const authentication = async (req, res, next) => {
   try {
-    if (!req.headers.authorization) throw { name: "Unauthorized", code: 401 };
+    const { authorization } = req.headers;
 
-    const [type, token] = req.headers.authorization.split(" ");
-    if (type !== "Bearer") throw { name: "Unauthorized", code: 401 };
+    if (!authorization) throw { name: "Invalid token", status: 401 };
 
-    const payload = verifyToken(token);
-    // const user = await User.findByPk(payload.id);
-    // if (!user) throw { name: "Unauthorized", code: 401 };
+    const [bearer, token] = authorization.split(" ");
 
-    // req.user = user;
+    if (bearer !== "Bearer" || !token)
+      throw { name: "Invalid token", status: 401 };
+
+    const { id } = verifyToken(token);
+    const user = await User.findOne({
+      where: {
+        id,
+      },
+    });
+    if (!user) throw { name: "Invalid token", status: 401 };
+
+    req.user = {
+      id,
+    };
+
     next();
   } catch (error) {
+    console.log("error auth: ", error);
     next(error);
   }
+  next();
 };
 
 module.exports = authentication;

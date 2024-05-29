@@ -3,14 +3,12 @@ const errorHandler = (err, req, res, next) => {
     case "SequelizeUniqueConstraintError":
     case "SequelizeValidationError":
     case "JsonWebTokenError":
+    case "SequelizeDatabaseError":
       res.status(400).json({ message: err.errors[0].message });
       break;
 
-    case "Unauthorized":
-    case "Email already registered":
-    case "Invalid email or password":
-      res.status(err.code).json({ message: err.name });
-      break;
+    case `${err.name}`:
+      res.status(statusCode).json({ message: err.name });
 
     default:
       console.log(err);
