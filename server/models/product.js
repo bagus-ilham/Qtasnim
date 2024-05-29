@@ -11,12 +11,50 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Product.belongsTo(models.ProductType, { foreignKey: "jenisBarangId"})
     }
   }
   Product.init({
-    name: DataTypes.STRING,
-    stok: DataTypes.INTEGER,
-    jenisBarangId: DataTypes.INTEGER
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Name Cannot be null",
+        },
+        notEmpty: {
+          msg: "Name cannot be empty",
+        },
+      },
+    },
+    stok: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Stok cannot be null",
+        },
+        notEmpty: {
+          msg: "Stok cannot be empty",
+        },
+        min: {
+          args : 1,
+          msg : "Minimum Stok is 1"
+        }
+      },
+    },
+    jenisBarangId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "jenisBarangId cannot be null",
+        },
+        notEmpty: {
+          msg: "jenisBarangId cannot be empty",
+        },
+      },
+    },
   }, {
     sequelize,
     modelName: 'Product',
