@@ -1,26 +1,26 @@
 [
     {
-      "nama": "Kopi",
+      "name": "Kopi",
       "stok": 100,
       "jenisBarangId": 1
     },
     {
-      "nama": "Teh",
+      "name": "Teh",
       "stok": 100,
       "jenisBarangId": 1
     },
     {
-      "nama": "Pasta Gigi",
+      "name": "Pasta Gigi",
       "stok": 100,
       "jenisBarangId": 2
     },
     {
-      "nama": "Sabun Mandi",
+      "name": "Sabun Mandi",
       "stok": 100,
       "jenisBarangId": 2
     },
     {
-      "nama": "Sampo",
+      "name": "Sampo",
       "stok": 100,
       "jenisBarangId": 2
     }
