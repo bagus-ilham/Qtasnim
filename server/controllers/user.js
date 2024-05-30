@@ -1,4 +1,4 @@
-const { compared } = require("../helper");
+const { compared, signToken } = require("../helper");
 const { User } = require("../models");
 
 module.exports = class UserController {
@@ -32,6 +32,7 @@ module.exports = class UserController {
         if (!req.body) {
             throw { name: "Email and Password is required", status: 400 };
         }
+        console.log(req.body)
         const { email, password } = req.body;
 
         if (!email) throw { name: "Email is required", status: 400 };

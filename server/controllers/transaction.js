@@ -1,19 +1,48 @@
 const { Transaction, Product, ProductType } = require("../models");
+const { Op } = require("sequelize");
 
 module.exports = class TransactionController {
   static async getAllTransaction(req, res, next) {
     try {
+      const { search, sortBy, sortOrder, startDate, endDate } = req.query;
+
+      const where = {};
+      if (search) {
+        where.namaTransaksi = { [Op.like]: `%${search}%` };
+      }
+      if (startDate && endDate) {
+        where.tanggalTransaksi = {
+          ...where.tanggalTransaksi,
+          [Op.between]: [startDate, endDate],
+        };
+      }
+
+      const order = [];
+      if (sortBy === "name") {
+        order.push(["Product", "name", sortOrder === "asc" ? "ASC" : "DESC"]);
+      } else if (sortBy === "date") {
+        order.push(["tanggalTransaksi", sortOrder === "asc" ? "ASC" : "DESC"]);
+      } else if (sortBy === "quantity") {
+        order.push(["jumlahTerjual", sortOrder === "asc" ? "ASC" : "DESC"]);
+      }
+
       const data = await Transaction.findAll({
+        where,
         attributes: { exclude: ["createdAt", "updatedAt"] },
-        include: {
-          model: Product,
-          attributes: { exclude: ["createdAt", "updatedAt"] },
-          include: {
-            model: ProductType,
+        include: [
+          {
+            model: Product,
             attributes: { exclude: ["createdAt", "updatedAt"] },
+            include: {
+              model: ProductType,
+              attributes: { exclude: ["createdAt", "updatedAt"] },
+            },
           },
-        },
+        ],
+        order,
+        group: ["Transaction.id", "Product.id", "Product->ProductType.id"],
       });
+
       res.status(200).json(data);
     } catch (error) {
       next(error);
@@ -34,7 +63,6 @@ module.exports = class TransactionController {
           },
         },
       });
-      if (!transaction) throw { name: "Transaction not found", status: 404 };
       res.status(200).json(transaction);
     } catch (error) {
       next(error);
@@ -61,10 +89,11 @@ module.exports = class TransactionController {
 
   static async editTransaction(req, res, next) {
     try {
+      console.log("masuk sini");
       const { id } = req.params;
+      console.log(id, "disini");
       const transaction = await Transaction.findByPk(id);
 
-      if (!transaction) throw { name: "Transaction not found", status: 404 };
       if (!req.body) throw { name: "Bad Request", status: 400 };
 
       let newTransaction = Object.fromEntries(
@@ -79,10 +108,8 @@ module.exports = class TransactionController {
 
       await transaction.update(newTransaction);
       await transaction.save();
-
-      res
-        .status(200)
-        .json({ message: `Transaction: ${transaction.name} has been updated` });
+      console.log(transaction, "ini trans");
+      res.status(200).json({ message: `Transaction has been updated` });
     } catch (error) {
       next(error);
     }
@@ -92,15 +119,13 @@ module.exports = class TransactionController {
     try {
       const { id } = req.params;
       const transaction = await Transaction.findByPk(id);
-      if (!transaction) throw { name: "Transaction not found", status: 404 };
+
       await Transaction.destroy({
         where: {
           id,
         },
       });
-      res
-        .status(200)
-        .json({ message: `Transaction: ${transaction.name} has been deleted` });
+      res.status(200).json({ message: `Transaction has been deleted` });
     } catch (error) {
       next(error);
     }

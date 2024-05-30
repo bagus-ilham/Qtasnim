@@ -1,9 +1,9 @@
 const express = require('express')
-const errorHandler = require('../middlewares/errorHander')
-const user = require('../user')
+const user = require('./user')
 const product = require('./product')
 const productType = require('./productType')
-const transaction = require('../transaction')
+const transaction = require('./transaction')
+const errorHandler = require('../middlewares/errorHander')
 
 const router = express.Router()
 

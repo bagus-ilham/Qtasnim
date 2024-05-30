@@ -21,20 +21,6 @@ module.exports = class ProductTypeController {
     }
   }
 
-  static async getProductTypeByName(name) {
-    try {
-      const productType = await ProductType.findOne({
-        where: {
-          name,
-        },
-      });
-      if (!productType) throw { name: "ProductType not found", status: 404 };
-      res.status(200).json(productType);
-    } catch (error) {
-      throw (error);
-    }
-  }
-
   static async addProductType(req, res, next) {
     try {
       if (!req.body) throw { name: "Bad Request", status: 400 };

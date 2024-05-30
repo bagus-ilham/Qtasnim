@@ -5,10 +5,10 @@ const authentication = require('../middlewares/auth')
 const router = express.Router()
 
 router.use(authentication)
-router.get('/transaction', TransactionController.getAllProduct)
-router.get('/transaction/id', TransactionController.getProductById)
-router.post('/transaction', TransactionController.addProduct)
-router.put('/transaction', TransactionController.editProduct)
-router.delete('/transaction', TransactionController.deleteProduct)
+router.get('/transaction', TransactionController.getAllTransaction)
+router.get('/transaction/:id', TransactionController.getTransactionById)
+router.post('/transaction', TransactionController.addTransaction)
+router.put('/transaction/:id', TransactionController.editTransaction)
+router.delete('/transaction/:id', TransactionController.deleteTransaction)
 
 module.exports = router

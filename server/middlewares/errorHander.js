@@ -1,4 +1,8 @@
 const errorHandler = (err, req, res, next) => {
+  console.log("masuk: " + err.message)
+  console.log(err)
+  let statusCode = err.status || 500;
+
   switch (err.name) {
     case "SequelizeUniqueConstraintError":
     case "SequelizeValidationError":
@@ -12,7 +16,7 @@ const errorHandler = (err, req, res, next) => {
 
     default:
       console.log(err);
-      res.status(500).json({ message: "Internal server Error" });
+      res.status(statusCode).json({ message: "Internal server Error" });
       break;
   }
 };

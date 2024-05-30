@@ -6,9 +6,9 @@ const router = express.Router()
 
 router.use(authentication)
 router.get('/producttype', ProductTypeController.getAllProductType)
-router.get('/producttype/id', ProductTypeController.getProductTypeById)
+router.get('/producttype/:id', ProductTypeController.getProductTypeById)
 router.post('/producttype', ProductTypeController.addProductType)
-router.put('/producttype', ProductTypeController.editProductType)
-router.delete('/producttype', ProductTypeController.deleteProductType)
+router.put('/producttype/:id', ProductTypeController.editProductType)
+router.delete('/producttype/:id', ProductTypeController.deleteProductType)
 
 module.exports = router

@@ -18,8 +18,10 @@ module.exports = class ProductController {
 
   static async getProductById(req, res, next) {
     try {
+      console.log(req.params);
       const { id } = req.params;
-      const product = await Product.findByPk(id, {
+      const product = await Product.findOne({
+        where: { id: id },
         attributes: { exclude: ["createdAt", "updatedAt"] },
         include: {
           model: ProductType,
@@ -31,23 +33,6 @@ module.exports = class ProductController {
       res.status(200).json(product);
     } catch (error) {
       next(error);
-    }
-  }
-
-  static async getProductByName(name) {
-    try {
-      const product = await Product.findOne({
-        where: { name },
-        attributes: { exclude: ["createdAt", "updatedAt"] },
-        include: {
-          model: ProductType,
-          attributes: { exclude: ["createdAt", "updatedAt"] },
-        },
-      });
-      if (!product) throw { name: "Product not found", status: 404 };
-      return product;
-    } catch (error) {
-      throw error;
     }
   }
 
@@ -63,7 +48,14 @@ module.exports = class ProductController {
         jenisBarangId,
       });
 
-      const product = this.getProductByName(name);
+      const product = await Product.findOne({
+        where: { name },
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+        include: {
+          model: ProductType,
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+      });
 
       res.status(201).json({ product, message: "Product has been created" });
     } catch (error) {
@@ -104,15 +96,17 @@ module.exports = class ProductController {
     try {
       const { id } = req.params;
       const product = await Product.findByPk(id);
-      if (!product) throw { name: "Product not found", status: 404 };
-      await Product.destroy({
-        where: {
-          id,
-        },
-      });
-      res
-        .status(200)
-        .json({ message: `Product: ${product.name} has been deleted` });
+      console.log(product)
+      if (product === null) {
+        throw { name: "Product not found", status: 404 };
+      } else {
+        await Product.destroy({
+          where: {
+            id,
+          },
+        });
+      }
+      res.status(200).json({ message: `Product has been deleted` });
     } catch (error) {
       next(error);
     }
