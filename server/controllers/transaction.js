@@ -63,6 +63,7 @@ module.exports = class TransactionController {
           },
         },
       });
+      if (!transaction) throw { name: "Transaction not found", status: 404 };
       res.status(200).json(transaction);
     } catch (error) {
       next(error);
@@ -94,6 +95,7 @@ module.exports = class TransactionController {
       console.log(id, "disini");
       const transaction = await Transaction.findByPk(id);
 
+      if (!transaction) throw { name: "Transaction not found", status: 404 };
       if (!req.body) throw { name: "Bad Request", status: 400 };
 
       let newTransaction = Object.fromEntries(
@@ -119,7 +121,7 @@ module.exports = class TransactionController {
     try {
       const { id } = req.params;
       const transaction = await Transaction.findByPk(id);
-
+      if (!transaction) throw { name: "Transaction not found", status: 404 };
       await Transaction.destroy({
         where: {
           id,
