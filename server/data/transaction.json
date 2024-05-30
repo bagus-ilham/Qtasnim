@@ -1,0 +1,37 @@
+[
+    {
+      "jumlahTerjual": 10,
+      "tanggalTransaksi": "2021-05-01",
+      "barangId": 1
+    },
+    {
+      "jumlahTerjual": 19,
+      "tanggalTransaksi": "2021-05-05",
+      "barangId": 2
+    },
+    {
+      "jumlahTerjual": 15,
+      "tanggalTransaksi": "2021-05-10",
+      "barangId": 1
+    },
+    {
+      "jumlahTerjual": 20,
+      "tanggalTransaksi": "2021-05-11",
+      "barangId": 3
+    },
+    {
+      "jumlahTerjual": 30,
+      "tanggalTransaksi": "2021-05-11",
+      "barangId": 4
+    },
+    {
+      "jumlahTerjual": 25,
+      "tanggalTransaksi": "2021-05-12",
+      "barangId": 5
+    },
+    {
+      "jumlahTerjual": 5,
+      "tanggalTransaksi": "2021-05-12",
+      "barangId": 2
+    }
+  ]

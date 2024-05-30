@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Product.belongsTo(models.ProductType, { foreignKey: "jenisBarangId"})
+      Product.hasMany(models.Transaction, { foreignKey: 'barangId' });
     }
   }
   Product.init({
@@ -48,10 +49,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          msg: "jenisBarangId cannot be null",
+          msg: "JenisBarangId cannot be null",
         },
         notEmpty: {
-          msg: "jenisBarangId cannot be empty",
+          msg: "JenisBarangId cannot be empty",
         },
       },
     },

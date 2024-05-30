@@ -1,9 +1,15 @@
-const { Product } = require("../models");
+const { Product, ProductType } = require("../models");
 
 module.exports = class ProductController {
   static async getAllProduct(req, res, next) {
     try {
-      const data = await Product.findAll({ order: [["id", "ASC"]] });
+      const data = await Product.findAll({
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+        include: {
+          model: ProductType,
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+      });
       res.status(200).json(data);
     } catch (error) {
       next(error);
@@ -13,7 +19,14 @@ module.exports = class ProductController {
   static async getProductById(req, res, next) {
     try {
       const { id } = req.params;
-      const product = await Product.findByPk(id);
+      const product = await Product.findByPk(id, {
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+        include: {
+          model: ProductType,
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+      });
+
       if (!product) throw { name: "Product not found", status: 404 };
       res.status(200).json(product);
     } catch (error) {
@@ -21,18 +34,20 @@ module.exports = class ProductController {
     }
   }
 
-  static async getProductByName(req, res, next) {
+  static async getProductByName(name) {
     try {
-      const { name } = req.params;
       const product = await Product.findOne({
-        where: {
-          name,
+        where: { name },
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+        include: {
+          model: ProductType,
+          attributes: { exclude: ["createdAt", "updatedAt"] },
         },
       });
       if (!product) throw { name: "Product not found", status: 404 };
-      res.status(200).json(product);
+      return product;
     } catch (error) {
-      next(error);
+      throw error;
     }
   }
 
@@ -67,7 +82,10 @@ module.exports = class ProductController {
       let newProduct = Object.fromEntries(
         Object.entries(req.body).filter(
           ([key, value]) =>
-            key in product && value !== undefined && value !== null && value !== ""
+            key in product &&
+            value !== undefined &&
+            value !== null &&
+            value !== ""
         )
       );
 
@@ -76,7 +94,7 @@ module.exports = class ProductController {
 
       res
         .status(200)
-        .json({message: `Product: ${product.name} has been updated` });
+        .json({ message: `Product: ${product.name} has been updated` });
     } catch (error) {
       next(error);
     }

@@ -24,12 +24,19 @@ module.exports = {
       return item
      })
      await queryInterface.bulkInsert('Products', data3);
+
+     const data4 = JSON.parse(fs.readFileSync('./data/transaction.json', "utf-8")).map(item => {
+      item.createdAt = item.updatedAt = new Date()
+      return item
+     })
+
+     await queryInterface.bulkInsert('Transactions', data4);
   },
 
   async down (queryInterface, Sequelize) {
     await queryInterface.bulkDelete('Users', null, {});
     await queryInterface.bulkDelete('ProductTypes', null, {});
     await queryInterface.bulkDelete('Products', null, {});
-
+    await queryInterface.bulkDelete('Transactions', null, {})
   }
 };
