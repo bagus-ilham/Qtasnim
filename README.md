@@ -1,4 +1,4 @@
-# Natural Farm
+# Qtasnim
 
 Qtasnim is CRUD for transactions, product and product type
 
